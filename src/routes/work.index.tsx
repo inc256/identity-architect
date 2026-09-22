@@ -1,0 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Page, Eyebrow, CTA } from "@/components/site/SiteShell";
+import { ProjectGrid } from "@/components/site/ProjectGrid";
+export const Route=createFileRoute("/work/")({head:()=>({meta:[{title:"Selected Work — CYTIC Branding Agency"},{name:"description",content:"Explore replaceable concept case studies showing CYTIC’s approach to strategy, identity, expression, and digital."},{property:"og:title",content:"Selected Work — CYTIC"},{property:"og:description",content:"Distinct brand systems, shown through clearly labeled concept projects."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}],links:[{rel:"canonical",href:"/work"}]}),component:Work});
+function Work(){return <Page><section className="page-intro"><div className="site-container"><Eyebrow>Work</Eyebrow><h1 className="display-xl">Built to be recognized.</h1><p>Three replaceable concept projects showing how identity can move from idea to expression.</p></div></section><section><div className="site-container pb-28"><ProjectGrid all/></div></section><CTA/></Page>}
