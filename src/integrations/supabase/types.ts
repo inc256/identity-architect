@@ -14,7 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      quote_requests: {
+        Row: {
+          brand_scope: string
+          business_name: string
+          business_stage: string
+          created_at: string
+          current_website: string | null
+          digital_requirements: Json
+          email: string
+          estimated_price: number
+          estimated_weeks_max: number
+          estimated_weeks_min: number
+          full_name: string
+          id: string
+          industry: string
+          online_presence: string | null
+          phone: string
+          preferred_contact: string
+          pricing_version: string
+          project_description: string
+          quote_id: string
+          selected_services: Json
+          status: string
+          timeline: string
+          updated_at: string
+        }
+        Insert: {
+          brand_scope: string
+          business_name: string
+          business_stage: string
+          created_at?: string
+          current_website?: string | null
+          digital_requirements?: Json
+          email: string
+          estimated_price: number
+          estimated_weeks_max: number
+          estimated_weeks_min: number
+          full_name: string
+          id?: string
+          industry: string
+          online_presence?: string | null
+          phone: string
+          preferred_contact: string
+          pricing_version: string
+          project_description: string
+          quote_id: string
+          selected_services?: Json
+          status?: string
+          timeline: string
+          updated_at?: string
+        }
+        Update: {
+          brand_scope?: string
+          business_name?: string
+          business_stage?: string
+          created_at?: string
+          current_website?: string | null
+          digital_requirements?: Json
+          email?: string
+          estimated_price?: number
+          estimated_weeks_max?: number
+          estimated_weeks_min?: number
+          full_name?: string
+          id?: string
+          industry?: string
+          online_presence?: string | null
+          phone?: string
+          preferred_contact?: string
+          pricing_version?: string
+          project_description?: string
+          quote_id?: string
+          selected_services?: Json
+          status?: string
+          timeline?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
