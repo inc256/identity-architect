@@ -1,24 +1,28 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import heroImage from "@/assets/cytic-hero.jpg";
+import { Button } from "@/components/ui/button";
+import { ArrowLink, CTA, Eyebrow, Page } from "@/components/site/SiteShell";
+import { ProjectGrid } from "@/components/site/ProjectGrid";
+import { ServicesList } from "@/components/site/ServicesList";
+import { audiences, process } from "@/data/site";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({ meta: [
+    { title: "CYTIC Branding Agency | Identity that hits differently." },
+    { name: "description", content: "CYTIC is a branding agency creating distinct identities for startups, businesses, and companies ready to stand apart." },
+    { property: "og:title", content: "CYTIC Branding Agency | Identity that hits differently." },
+    { property: "og:description", content: "Distinct identities for startups, businesses, and companies ready to stand apart." },
+    { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+  ], links: [{ rel: "canonical", href: "/" }], scripts: [{ type: "application/ld+json", children: JSON.stringify({ "@context":"https://schema.org", "@type":"ProfessionalService", name:"CYTIC Branding Agency", slogan:"Identity that hits differently.", description:"Brand strategy, identity, expression, and digital experiences." }) }] }),
+  component: Home,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
+function Home() { return <Page>
+  <section className="hero bg-navy text-cream"><div className="site-container grid gap-10 pb-8 pt-28 lg:grid-cols-12 lg:pt-36"><div className="lg:col-span-12"><Eyebrow light>Branding agency</Eyebrow><h1 className="hero-title mt-8">Identity that hits <span>differently.</span></h1></div><p className="max-w-lg text-lg leading-relaxed text-cream/75 lg:col-span-5 lg:col-start-7">We turn ideas, businesses, and ambitions into distinct brands built to be remembered.</p><div className="flex flex-wrap gap-3 lg:col-span-6 lg:col-start-7"><Button asChild variant="gold" size="xl"><Link to="/quote">Build Your Quote <ArrowUpRight/></Link></Button><Button asChild variant="outline" size="xl" className="border-cream/40 text-cream hover:bg-cream hover:text-navy"><Link to="/work">Explore Our Work <ArrowDown/></Link></Button></div></div><div className="site-container pb-8"><div className="hero-image"><img src={heroImage} alt="Art-directed collection of premium brand identity materials" width={1536} height={1024}/><div className="hero-stamp">CYTIC / Identity systems</div></div></div></section>
+  <section className="cream-section"><div className="site-container grid gap-10 py-24 lg:grid-cols-12 lg:py-36"><div className="lg:col-span-3"><Eyebrow>What we do</Eyebrow></div><div className="lg:col-span-8 lg:col-start-5"><h2 className="display-lg">We don't just make things look good.</h2><p className="statement-copy">We build identities that give businesses a recognizable presence, a clear direction, and a feeling people remember.</p><ArrowLink to="/services">What we do</ArrowLink></div></div></section>
+  <section className="bg-background"><div className="site-container py-24 lg:py-32"><div className="section-heading"><div><Eyebrow>Selected work</Eyebrow><h2 className="display-lg mt-5">Selected work.</h2></div><p>A selection of identities we've shaped from idea to expression. These concept projects are ready to be replaced with CYTIC work.</p></div><ProjectGrid/><div className="mt-16"><ArrowLink to="/work">View all work</ArrowLink></div></div></section>
+  <section className="bg-navy text-cream"><div className="site-container py-24 lg:py-32"><div className="section-heading border-cream/20"><div><Eyebrow light>Capabilities</Eyebrow><h2 className="display-lg mt-5">From strategy<br/>to expression.</h2></div><p className="text-cream/65">One connected system, built to make your business unmistakable.</p></div><ServicesList/><div className="mt-12"><ArrowLink to="/services">See Our Services</ArrowLink></div></div></section>
+  <section className="cream-section"><div className="site-container grid gap-16 py-24 lg:grid-cols-2 lg:py-36"><div><Eyebrow>Not just a logo</Eyebrow><h2 className="display-lg mt-6">A logo is only the beginning.</h2><p className="statement-copy max-w-xl">A memorable brand is more than a mark. It's the strategy, identity, language, and experience that make a business recognizable.</p></div><div className="brand-ladder">{["Strategy","Identity","Expression","Digital","Recognition"].map((x,i)=><div key={x}><span>0{i+1}</span><strong>{x}</strong>{i<4&&<ArrowDown/>}</div>)}</div></div></section>
+  <section><div className="site-container py-24 lg:py-32"><Eyebrow>Who we work with</Eyebrow><h2 className="display-md mt-6 max-w-5xl">Wherever you are, your brand can go further.</h2><div className="audience-grid">{audiences.map(([t,d],i)=><article key={t}><span>0{i+1}</span><h3>{t}</h3><p>{d}</p></article>)}</div></div></section>
+  <section className="bg-navy text-cream"><div className="site-container py-24 lg:py-32"><div className="section-heading border-cream/20"><div><Eyebrow light>CYTIC process</Eyebrow><h2 className="display-lg mt-6">From idea<br/>to identity.</h2></div><ArrowLink to="/process">See the process</ArrowLink></div><div className="process-list">{process.map(([n,t,d])=><article key={n}><span>{n}</span><h3>{t}</h3><p>{d}</p></article>)}</div></div></section><CTA/>
+ </Page> }
