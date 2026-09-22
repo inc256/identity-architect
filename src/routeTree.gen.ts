@@ -16,6 +16,9 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProcessRouteImport } from './routes/process'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as QuoteIndexRouteImport } from './routes/quote.index'
+import { Route as QuoteConfirmationRouteImport } from './routes/quote.confirmation'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap.[.]xml'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
 import { Route as WorkSlugRouteImport } from './routes/work.$slug'
 
@@ -54,6 +57,21 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuoteIndexRoute = QuoteIndexRouteImport.update({
+  id: '/quote/',
+  path: '/quote/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuoteConfirmationRoute = QuoteConfirmationRouteImport.update({
+  id: '/quote/confirmation',
+  path: '/quote/confirmation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap/.xml',
+  path: '/sitemap/.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorkIndexRoute = WorkIndexRouteImport.update({
   id: '/work/',
   path: '/work/',
@@ -73,7 +91,10 @@ export interface FileRoutesByFullPath {
   '/process': typeof ProcessRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
+  '/quote/confirmation': typeof QuoteConfirmationRoute
+  '/sitemap/.xml': typeof SitemapDotxmlRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/quote/': typeof QuoteIndexRoute
   '/work/': typeof WorkIndexRoute
 }
 export interface FileRoutesByTo {
@@ -84,7 +105,10 @@ export interface FileRoutesByTo {
   '/process': typeof ProcessRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
+  '/quote/confirmation': typeof QuoteConfirmationRoute
+  '/sitemap/.xml': typeof SitemapDotxmlRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/quote': typeof QuoteIndexRoute
   '/work': typeof WorkIndexRoute
 }
 export interface FileRoutesById {
@@ -96,7 +120,10 @@ export interface FileRoutesById {
   '/process': typeof ProcessRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
+  '/quote/confirmation': typeof QuoteConfirmationRoute
+  '/sitemap/.xml': typeof SitemapDotxmlRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/quote/': typeof QuoteIndexRoute
   '/work/': typeof WorkIndexRoute
 }
 export interface FileRouteTypes {
@@ -109,7 +136,10 @@ export interface FileRouteTypes {
     | '/process'
     | '/services'
     | '/terms'
+    | '/quote/confirmation'
+    | '/sitemap/.xml'
     | '/work/$slug'
+    | '/quote/'
     | '/work/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -120,7 +150,10 @@ export interface FileRouteTypes {
     | '/process'
     | '/services'
     | '/terms'
+    | '/quote/confirmation'
+    | '/sitemap/.xml'
     | '/work/$slug'
+    | '/quote'
     | '/work'
   id:
     | '__root__'
@@ -131,7 +164,10 @@ export interface FileRouteTypes {
     | '/process'
     | '/services'
     | '/terms'
+    | '/quote/confirmation'
+    | '/sitemap/.xml'
     | '/work/$slug'
+    | '/quote/'
     | '/work/'
   fileRoutesById: FileRoutesById
 }
@@ -143,7 +179,10 @@ export interface RootRouteChildren {
   ProcessRoute: typeof ProcessRoute
   ServicesRoute: typeof ServicesRoute
   TermsRoute: typeof TermsRoute
+  QuoteConfirmationRoute: typeof QuoteConfirmationRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WorkSlugRoute: typeof WorkSlugRoute
+  QuoteIndexRoute: typeof QuoteIndexRoute
   WorkIndexRoute: typeof WorkIndexRoute
 }
 
@@ -198,6 +237,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quote/': {
+      id: '/quote/'
+      path: '/quote'
+      fullPath: '/quote/'
+      preLoaderRoute: typeof QuoteIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quote/confirmation': {
+      id: '/quote/confirmation'
+      path: '/quote/confirmation'
+      fullPath: '/quote/confirmation'
+      preLoaderRoute: typeof QuoteConfirmationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap/.xml': {
+      id: '/sitemap/.xml'
+      path: '/sitemap/.xml'
+      fullPath: '/sitemap/.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/work/': {
       id: '/work/'
       path: '/work'
@@ -223,7 +283,10 @@ const rootRouteChildren: RootRouteChildren = {
   ProcessRoute: ProcessRoute,
   ServicesRoute: ServicesRoute,
   TermsRoute: TermsRoute,
+  QuoteConfirmationRoute: QuoteConfirmationRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   WorkSlugRoute: WorkSlugRoute,
+  QuoteIndexRoute: QuoteIndexRoute,
   WorkIndexRoute: WorkIndexRoute,
 }
 export const routeTree = rootRouteImport
