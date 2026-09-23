@@ -1299,6 +1299,100 @@ Accessible form labels
 
 Good color contrast
 
+## Self-Quote System: How It Works
+
+The self-quote experience is available at `/quote`. It is a guided, seven-step quote builder. It creates an estimate only; it is not a final quotation or contract.
+
+### Flow
+
+1. **Business stage**: the client chooses where they are with the business.
+2. **Services**: the client selects one or more services from Strategy, Identity, Expression, and Digital.
+3. **Brand scope**: the client chooses `Essential`, `Complete`, or `Signature`.
+4. **Digital requirements**: this step is only required when a digital service is selected. Options include landing page, website, e-commerce, web application, Android, iOS, cross-platform, or not sure.
+5. **Business information**: business name, industry, website, online presence, and project description.
+6. **Timeline**: the client chooses when they want to start.
+7. **Project details and submission**: name, email, phone, preferred contact method, and final review before submission.
+
+The progress state is held in the `step` React state. The displayed progress bar covers steps 1 through 6; step 7 is the contact/submission stage.
+
+### Main Files
+
+| Purpose | File |
+| --- | --- |
+| Quote page, steps, validation, session state, submit action | `src/routes/quote.index.tsx` |
+| Quote state, pricing configuration, calculation formula, UGX formatting | `src/lib/quote.ts` |
+| Server validation and Supabase insert | `src/lib/quote.functions.ts` |
+| Submission confirmation and estimate download | `src/routes/quote.confirmation.tsx` |
+| Service names used by the quote step and service pages | `src/data/site.ts` |
+| Database table, generated quote ID, statuses, timestamps | `drizzle/migrations/0000_create_cytic_quote_requests.sql` |
+
+### Pricing Calculation
+
+All editable pricing values are centralized in `src/lib/quote.ts` under `pricingConfig`:
+
+- `minimum`: minimum project estimate in UGX. Current value: `1,800,000`.
+- `services`: base price for each selected service.
+- `packageMultipliers`: `essential: 1`, `complete: 1.35`, `signature: 1.75`.
+- `digitalMultipliers`: multiplier based on the largest selected digital requirement.
+- `PRICING_VERSION`: stored with every submission so historical quotes can be traced to the pricing rules used.
+
+The calculation currently works as follows:
+
+```text
+base = sum(selected service prices)
+package multiplier = selected brand scope multiplier, or 1
+digital multiplier = largest selected digital requirement multiplier, or 1
+amount = max(minimum, round(base * package multiplier * digital multiplier / 50,000) * 50,000)
+```
+
+Timeline is calculated from the selected scope and services. Signature adds four weeks, Complete adds two weeks, App Development adds eight weeks, other digital work adds four weeks, and the number of selected services adds a capped service duration.
+
+### Client-Side Persistence
+
+While the client is filling the form, the complete `QuoteState` is saved to `sessionStorage` under:
+
+```text
+cytic-quote
+```
+
+This survives navigation and refreshes within the browser session. It is removed after a successful submission. The quote is not saved to the database until the client submits it.
+
+### Submission Lifecycle
+
+1. The client submits the quote from the final step.
+2. `submitQuote` validates the payload with the Zod schema in `src/lib/quote.functions.ts`.
+3. The server recalculates the estimate. Do not trust a price sent by the browser.
+4. Supabase inserts a row into `public.quote_requests` using the service role client.
+5. The database trigger generates an ID such as `CYTIC-Q-2026-001` when `quote_id` is empty.
+6. The server returns the quote ID, estimate, and timeline.
+7. The browser stores a short confirmation payload under `cytic-confirmation` and navigates to `/quote/confirmation`.
+
+The database stores client details, business context, selected services, scope, digital requirements, estimate, timeline, `pricing_version`, status, and timestamps. New records start with status `New`.
+
+### How to Safely Change the Quote
+
+**Change a price:** edit only the relevant value in `pricingConfig.services`, then update `PRICING_VERSION` in the same change.
+
+**Change a package multiplier:** edit `pricingConfig.packageMultipliers`. Keep the keys aligned with the `brandScope` type and server Zod enum.
+
+**Change a digital multiplier:** edit `pricingConfig.digitalMultipliers`. Keep the option text aligned with the `digital` options in `src/routes/quote.index.tsx`.
+
+**Add or remove a service:** update `src/data/site.ts`, `pricingConfig.services`, and the service-selection rendering/filter rules in `src/routes/quote.index.tsx`. A service that is selectable but missing from `pricingConfig.services` contributes `0`, so always update both places.
+
+**Change required fields:** update both `valid()` in `src/routes/quote.index.tsx` and `quoteSchema` in `src/lib/quote.functions.ts`. Client validation improves the experience; server validation is the actual boundary.
+
+**Change stored fields:** update the database migration/schema, Supabase generated types, the server insert mapping, and the confirmation type/rendering together.
+
+**Change the estimate formula:** update `calculateQuote`, increment `PRICING_VERSION`, and test minimum pricing, package multipliers, digital requirements, App Development duration, and empty selections.
+
+### Important Rules
+
+- The estimate is informational and must not be presented as a final contract.
+- Always calculate the final submitted price on the server.
+- Never change old pricing versions when historical quote comparisons matter; add a new version instead.
+- Keep service labels consistent across `src/data/site.ts`, the quote UI, and `pricingConfig`.
+- After quote changes, run `npm run build` and manually test the full flow from `/quote` through confirmation.
+
 Reduced-motion support
 
 Alt text for meaningful images

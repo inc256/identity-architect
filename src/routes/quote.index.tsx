@@ -1,23 +1,119 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Page, Eyebrow } from "@/components/site/SiteShell";
-import { services } from "@/data/site";
-import { calculateQuote, emptyQuote, formatUGX, isDigitalService, type QuoteState } from "@/lib/quote";
+import { calculateQuote, emptyQuote, formatDuration, formatUGX, getQuoteItemDuration, getQuoteItemPrice, type QuoteState } from "@/lib/quote";
 import { submitQuote } from "@/lib/quote.functions";
 
-export const Route=createFileRoute("/quote/")({head:()=>({meta:[{title:"Build Your Quote — CYTIC Branding Agency"},{name:"description",content:"Configure your brand project and get an estimated investment in minutes."},{property:"og:title",content:"Build Your Quote — CYTIC"},{property:"og:description",content:"Tell us what your brand needs and receive an estimated investment."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}],links:[{rel:"canonical",href:"/quote"}]}),component:QuoteBuilder});
-const stages=["I'm starting a business","I'm growing an existing business","I'm rebranding","I'm an established company","I'm not sure yet"];
-const scopes=[{id:"essential",name:"Essential",desc:"A focused, professional identity."},{id:"complete",name:"Complete",desc:"A complete brand system."},{id:"signature",name:"Signature",desc:"A comprehensive brand transformation."}] as const;
-const digital=["Landing page","Company website","E-commerce","Web application","Android","iOS","Cross-platform","Not sure"];
-const timelines=["As soon as possible","Within 1 month","1–3 months","3+ months","I'm just exploring"];
-function QuoteBuilder(){const navigate=useNavigate();const [step,setStep]=useState(1);const [quote,setQuote]=useState<QuoteState>(emptyQuote);const [error,setError]=useState("");const [submitting,setSubmitting]=useState(false);
-useEffect(()=>{try{const saved=sessionStorage.getItem("cytic-quote");if(saved)setQuote({...emptyQuote,...JSON.parse(saved)})}catch{}},[]);useEffect(()=>{sessionStorage.setItem("cytic-quote",JSON.stringify(quote))},[quote]);const estimate=useMemo(()=>calculateQuote(quote),[quote]);const hasDigital=quote.selectedServices.some(isDigitalService);
-const update=<K extends keyof QuoteState>(key:K,value:QuoteState[K])=>setQuote(q=>({...q,[key]:value}));const toggle=(key:"selectedServices"|"digitalRequirements",value:string)=>update(key,quote[key].includes(value)?quote[key].filter(x=>x!==value):[...quote[key],value]);
-const valid=()=>{if(step===1)return !!quote.businessStage;if(step===2)return quote.selectedServices.length>0;if(step===3)return !!quote.brandScope;if(step===4)return !hasDigital||quote.digitalRequirements.length>0;if(step===5)return !!quote.businessName&&!!quote.industry&&quote.projectDescription.trim().length>=10;if(step===6)return !!quote.timeline;return true};const next=()=>{if(!valid()){setError("Complete this step to continue.");return}setError("");setStep(s=>Math.min(7,s+1));window.scrollTo({top:0,behavior:"smooth"})};
-const submit=async()=>{if(!quote.fullName||!quote.email.includes("@")||quote.phone.length<6){setError("Add your name, valid email, and phone number.");return}setSubmitting(true);setError("");try{const result=await submitQuote({data:quote});sessionStorage.setItem("cytic-confirmation",JSON.stringify({...result,selectedServices:quote.selectedServices,businessName:quote.businessName,brandScope:quote.brandScope}));sessionStorage.removeItem("cytic-quote");await navigate({to:"/quote/confirmation"})}catch(e){setError(e instanceof Error?e.message:"We couldn't submit your brief.")}finally{setSubmitting(false)}};
-return <Page><section className="quote-shell bg-navy text-cream"><div className="site-container py-12 lg:py-20"><div className="quote-top"><Link to="/" className="arrow-link"><ArrowLeft/> Exit quote</Link><span>{step<=6?`Step ${step} of 6`:"Project details"}</span></div><div className="progress-track"><span style={{width:`${Math.min(step,6)/6*100}%`}}/></div><div className="quote-grid"><div className="quote-main">{step===1&&<Step title="Where are you with your business?" eyebrow="Business stage"><Choices items={stages} selected={[quote.businessStage]} onClick={x=>update("businessStage",x)}/></Step>}{step===2&&<Step title="What does your brand need?" eyebrow="Select all that apply"><div className="service-choices">{services.map(group=><fieldset key={group.id}><legend>{group.title}</legend>{group.items.filter(x=>x!=="Typography"&&x!=="Color Systems"&&x!=="Landing Pages").map(x=><Choice key={x} label={x} active={quote.selectedServices.includes(x)} onClick={()=>toggle("selectedServices",x)}/>) }{group.id==="digital"&&<Choice label="Landing Page" active={quote.selectedServices.includes("Landing Page")} onClick={()=>toggle("selectedServices","Landing Page")}/>}</fieldset>)}</div></Step>}{step===3&&<Step title="How much of the brand are we building?" eyebrow="Brand scope"><div className="scope-choices">{scopes.map(x=><button key={x.id} type="button" onClick={()=>update("brandScope",x.id)} className={quote.brandScope===x.id?"selected":""}><span>{x.name}</span><p>{x.desc}</p>{quote.brandScope===x.id&&<Check/>}</button>)}</div></Step>}{step===4&&<Step title={hasDigital?"What should the digital experience include?":"Your project stays focused on the brand."} eyebrow="Digital requirements">{hasDigital?<Choices items={digital} selected={quote.digitalRequirements} onClick={x=>toggle("digitalRequirements",x)}/>:<div className="skip-message"><p>No digital services selected.</p><span>We’ll keep this estimate focused on strategy, identity, and expression.</span></div>}</Step>}{step===5&&<Step title="Tell us about the business." eyebrow="Business information"><div className="form-grid"><Field label="Business name *"><Input value={quote.businessName} onChange={e=>update("businessName",e.target.value)}/></Field><Field label="Industry *"><Input value={quote.industry} onChange={e=>update("industry",e.target.value)}/></Field><Field label="Current website"><Input type="url" placeholder="https://" value={quote.website} onChange={e=>update("website",e.target.value)}/></Field><Field label="Social / online presence"><Input value={quote.onlinePresence} onChange={e=>update("onlinePresence",e.target.value)}/></Field><Field label="Short project description *" full><Textarea rows={5} value={quote.projectDescription} onChange={e=>update("projectDescription",e.target.value)} placeholder="What are you building or changing?"/></Field></div></Step>}{step===6&&<Step title="When do you want to start?" eyebrow="Timeline"><Choices items={timelines} selected={[quote.timeline]} onClick={x=>update("timeline",x)}/></Step>}{step===7&&<Step title="Your brand estimate." eyebrow="Estimate"><div className="estimate-panel"><p>{quote.brandScope.toUpperCase()} BRAND PROJECT</p><h2>{formatUGX(estimate.amount)}</h2><span>Estimated timeline: {estimate.minWeeks}–{estimate.maxWeeks} weeks</span><ul>{quote.selectedServices.map(s=><li key={s}><Check/>{s}</li>)}</ul><p className="disclaimer">This estimate is based on the information provided and is not a final quotation. Final scope, pricing, and timeline will be confirmed after reviewing your project.</p></div><div className="quote-result-actions"><Button variant="gold" size="xl" onClick={()=>setStep(8)}>Continue With This Project <ArrowRight/></Button><Button variant="ghost" size="xl" onClick={()=>setStep(2)}>Adjust My Quote</Button></div></Step>}{step===8&&<Step title="Who should we contact?" eyebrow="Submit your brief"><div className="form-grid"><Field label="Full name *"><Input value={quote.fullName} onChange={e=>update("fullName",e.target.value)}/></Field><Field label="Business name *"><Input value={quote.businessName} onChange={e=>update("businessName",e.target.value)}/></Field><Field label="Email *"><Input type="email" value={quote.email} onChange={e=>update("email",e.target.value)}/></Field><Field label="Phone number *"><Input type="tel" value={quote.phone} onChange={e=>update("phone",e.target.value)}/></Field><Field label="Preferred contact method"><select value={quote.preferredContact} onChange={e=>update("preferredContact",e.target.value)}><option>Email</option><option>Phone</option><option>WhatsApp</option></select></Field><Field label="Project details" full><Textarea rows={4} value={quote.projectDescription} onChange={e=>update("projectDescription",e.target.value)}/></Field></div></Step>}{error&&<p className="form-error" role="alert">{error}</p>}<div className="quote-controls">{step>1&&step!==7&&<Button variant="ghost" size="xl" onClick={()=>{setError("");setStep(s=>s-1)}}><ArrowLeft/> Back</Button>}<span/>{step<=6&&<Button variant="gold" size="xl" onClick={next}>Continue <ArrowRight/></Button>}{step===8&&<Button variant="gold" size="xl" onClick={submit} disabled={submitting}>{submitting?"Submitting…":"Submit Project Brief"} {!submitting&&<ArrowRight/>}</Button>}</div></div>{step<=6&&<aside className="quote-aside"><Eyebrow light>Current estimate</Eyebrow><strong>{quote.selectedServices.length?formatUGX(estimate.amount):"Build your scope"}</strong><p>{quote.selectedServices.length} service{quote.selectedServices.length===1?"":"s"} selected</p></aside>}</div></div></section></Page>}
-function Step({title,eyebrow,children}:{title:string;eyebrow:string;children:React.ReactNode}){return <div className="quote-step"><Eyebrow light>{eyebrow}</Eyebrow><h1>{title}</h1>{children}</div>};function Choices({items,selected,onClick}:{items:readonly string[];selected:string[];onClick:(x:string)=>void}){return <div className="choices">{items.map(x=><Choice key={x} label={x} active={selected.includes(x)} onClick={()=>onClick(x)}/>)}</div>};function Choice({label,active,onClick}:{label:string;active:boolean;onClick:()=>void}){return <button type="button" className={active?"selected":""} onClick={onClick}><span>{label}</span><i>{active?<Check/>:"+"}</i></button>};function Field({label,children,full=false}:{label:string;children:React.ReactNode;full?:boolean}){return <label className={full?"full":""}><span>{label}</span>{children}</label>}
+export const Route = createFileRoute("/quote/")({
+  head: () => ({
+    meta: [
+      { title: "Build Your Quote — CYTIC Branding Agency" },
+      { name: "description", content: "Configure your brand project and get an estimated investment in minutes." },
+    ],
+    links: [{ rel: "canonical", href: "/quote" }],
+  }),
+  component: QuoteBuilder,
+});
+
+const stages = ["I'm starting a business", "I'm growing an existing business", "I'm rebranding", "I'm an established company", "I'm not sure yet"];
+const strategy = ["Brand Discovery", "Brand Strategy", "Brand Positioning"];
+const identity = ["Logo Design", "Visual Identity", "Brand Guidelines"];
+const digital = ["Landing page", "Company website", "E-commerce", "Web application", "Android", "iOS", "Cross-platform", "Not sure"];
+const timelines = ["As soon as possible", "Within 1 month", "1–3 months", "3+ months", "I'm just exploring"];
+const contactMethods = ["Email", "Phone", "WhatsApp"];
+const isStartupOrUncertain = (stage: string) => stage === "I'm starting a business" || stage === "I'm not sure yet";
+const descriptions: Record<string, string> = {
+  "Brand Discovery": "Understand the business, audience, challenge, and opportunity.",
+  "Brand Strategy": "Define the brand's direction, purpose, and strategic foundation.",
+  "Brand Positioning": "Clarify how the brand should stand apart in its market.",
+  "Logo Design": "Create the core mark people use to recognize the brand.",
+  "Visual Identity": "Build the visual language across type, color, layout, and imagery.",
+  "Brand Guidelines": "Document how the identity should be used consistently.",
+  Naming: "Develop a distinctive and usable name for the business or offer.",
+  "Landing page": "Create a focused single page for one offer, campaign, or launch.",
+  "Company website": "Design a multi-page website for the business and its audiences.",
+  "E-commerce": "Create a digital storefront for products, payments, and transactions.",
+  "Web application": "Plan and design a browser-based product with custom functionality.",
+  Android: "Design a native Android product experience.",
+  iOS: "Design a native iOS product experience.",
+  "Cross-platform": "Plan one app experience that works across multiple platforms.",
+  "Not sure": "Share what you know and we will help clarify the digital scope.",
+};
+
+function QuoteBuilder() {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+  const [quote, setQuote] = useState<QuoteState>(emptyQuote);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const estimate = useMemo(() => calculateQuote(quote), [quote]);
+  const namingSelected = quote.selectedServices.includes("Naming");
+  const digitalSelected = quote.digitalRequirements.length > 0;
+  const totalSteps = 8;
+
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("cytic-quote");
+      if (saved) setQuote({ ...emptyQuote, ...JSON.parse(saved) });
+    } catch { /* Ignore invalid session data. */ }
+  }, []);
+  useEffect(() => { sessionStorage.setItem("cytic-quote", JSON.stringify(quote)); }, [quote]);
+
+  const update = <K extends keyof QuoteState>(key: K, value: QuoteState[K]) => setQuote((current) => ({ ...current, [key]: value }));
+  const toggleService = (value: string) => update("selectedServices", quote.selectedServices.includes(value) ? quote.selectedServices.filter((item) => item !== value) : [...quote.selectedServices, value]);
+  const toggleDigital = (value: string) => update("digitalRequirements", quote.digitalRequirements.includes(value) ? quote.digitalRequirements.filter((item) => item !== value) : [...quote.digitalRequirements, value]);
+  const valid = () => {
+    if (step === 1) return !!quote.businessStage;
+    if (step === 2) return quote.selectedServices.some((item) => strategy.includes(item));
+    if (step === 3) return quote.selectedServices.some((item) => identity.includes(item));
+    if (step === 4) return namingSelected || digitalSelected;
+    if (step === 5) return !!quote.industry.trim() && quote.projectDescription.trim().length >= 10;
+    if (step === 6) return !!quote.timeline;
+    if (step === 7) return !!quote.fullName && quote.email.includes("@") && quote.phone.length >= 6;
+    return true;
+  };
+  const next = () => { if (!valid()) { setError(step === 5 ? "Add your industry and a project description of at least 10 characters. Website and business name are optional." : "Complete this step to continue."); return; } setError(""); setStep((current) => Math.min(totalSteps, current + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const back = () => { setError(""); setStep((current) => Math.max(1, current - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const submit = async () => {
+    if (!valid()) { setError("Complete the required details before submitting."); return; }
+    setSubmitting(true); setError("");
+    try {
+      const result = await submitQuote({ data: quote });
+      sessionStorage.setItem("cytic-confirmation", JSON.stringify({ ...result, selectedServices: quote.selectedServices, businessName: quote.businessName }));
+      sessionStorage.removeItem("cytic-quote");
+      await navigate({ to: "/quote/confirmation" });
+    } catch (caught) { setError(caught instanceof Error ? caught.message : "We couldn't submit your brief."); }
+    finally { setSubmitting(false); }
+  };
+
+  return <Page><section className="quote-shell bg-navy text-cream"><div className="site-container py-12 lg:py-20">
+    <div className="quote-top"><Link to="/" className="arrow-link"><ArrowLeft /> Exit quote</Link><span>Step {step} of {totalSteps}</span></div>
+    <div className="progress-track"><span style={{ width: `${step / totalSteps * 100}%` }} /></div>
+    <div className="quote-grid"><div className="quote-main">
+      {step === 1 && <Step title="Where are you with your business?" eyebrow="Business stage"><Choices items={stages} selected={[quote.businessStage]} onClick={(value) => update("businessStage", value)} /></Step>}
+      {step === 2 && <Step title="What strategy does your brand need?" eyebrow="Step 2 · Strategy"><Choices items={strategy} selected={quote.selectedServices} onClick={toggleService} /></Step>}
+      {step === 3 && <Step title="What identity does your brand need?" eyebrow="Step 3 · Identity"><Choices items={identity} selected={quote.selectedServices} onClick={toggleService} /></Step>}
+      {step === 4 && <Step title="Do you need naming or digital work?" eyebrow="Step 4 · Naming and digital requirements"><div className="service-choices"><fieldset><legend>Naming</legend><Choice label="Naming" description={descriptions.Naming} active={namingSelected} onClick={() => toggleService("Naming")} /></fieldset><fieldset><legend>Digital experience</legend>{digital.map((item) => <Choice key={item} label={item} description={descriptions[item]} active={quote.digitalRequirements.includes(item)} onClick={() => toggleDigital(item)} />)}</fieldset></div></Step>}
+      {step === 5 && <Step title="Tell us about the project." eyebrow="Business information"><div className="form-grid">
+        {namingSelected && <Field label="Business name"><Input value={quote.businessName} onChange={(event) => update("businessName", event.target.value)} placeholder="Your business name" /></Field>}
+        <Field label="Industry"><Input value={quote.industry} onChange={(event) => update("industry", event.target.value)} placeholder="Your industry" /></Field>
+        {!isStartupOrUncertain(quote.businessStage) && <Field label="Current website"><Input value={quote.website} onChange={(event) => update("website", event.target.value)} placeholder="https://" /></Field>}
+        <Field label="Project description" full><Textarea value={quote.projectDescription} onChange={(event) => update("projectDescription", event.target.value)} placeholder="What are you building, changing, or trying to achieve?" /></Field>
+      </div></Step>}
+      {step === 6 && <Step title="When do you want to start?" eyebrow="Timeline"><Choices items={timelines} selected={[quote.timeline]} onClick={(value) => update("timeline", value)} /></Step>}
+      {step === 7 && <Step title="Where should we send the next steps?" eyebrow="Contact details"><div className="form-grid"><Field label="Full name"><Input value={quote.fullName} onChange={(event) => update("fullName", event.target.value)} placeholder="Your name" /></Field><Field label="Email"><Input type="email" value={quote.email} onChange={(event) => update("email", event.target.value)} placeholder="you@example.com" /></Field><Field label="Phone"><Input value={quote.phone} onChange={(event) => update("phone", event.target.value)} placeholder="Your phone number" /></Field><Field label="Preferred contact"><select className="quote-select" value={quote.preferredContact} onChange={(event) => update("preferredContact", event.target.value)}>{contactMethods.map((method) => <option key={method} value={method}>{method}</option>)}</select></Field></div></Step>}
+      {step === 8 && <Step title="Your project total." eyebrow="Estimate"><div className="estimate-panel"><p>CALCULATED PROJECT TOTAL</p><h2>{formatUGX(estimate.selectedTotal)}</h2><span>Estimated completion: {formatDuration(estimate.minDays)} – {formatDuration(estimate.maxDays)}</span><ul>{estimate.selectedItems.map((service) => { const duration = getQuoteItemDuration(service); return <li key={service}><Check /><span><strong>{service}</strong><small>{formatUGX(getQuoteItemPrice(service))} · {duration[0] ? `${formatDuration(duration[0])} – ${formatDuration(duration[1])}` : "Duration to be confirmed"}</small></span></li>; })}</ul><p className="disclaimer">This is an estimate based on the information provided. The real project value may change during development as the scope, complexity, deliverables, revisions, and requirements become clearer. Final pricing and timeline will be confirmed after CYTIC review.</p></div></Step>}
+      {error && <p className="quote-error" role="alert">{error}</p>}
+      <div className="quote-controls">{step > 1 && <Button variant="ghost" size="xl" onClick={back}><ArrowLeft /> Back</Button>}{step < 8 && <Button variant="gold" size="xl" onClick={next}>Continue <ArrowRight /></Button>}{step === 8 && <Button variant="gold" size="xl" onClick={submit} disabled={submitting}>{submitting ? "Sending..." : "Request Detailed Proposal"} <ArrowRight /></Button>}</div>
+    </div><aside className="live-estimate" aria-label="Live quote estimate"><span>Live total</span><strong>{estimate.selectedTotal > 0 ? formatUGX(estimate.selectedTotal) : "Select services"}</strong><div><span>{quote.selectedServices.length} service{quote.selectedServices.length === 1 ? "" : "s"} selected</span><span>{quote.digitalRequirements.length} digital requirement{quote.digitalRequirements.length === 1 ? "" : "s"}</span></div><p>Exact checked-item total. This is an estimate and may change as the project scope and requirements develop.</p></aside></div>
+  </div></section></Page>;
+}
+
+function Step({ title, eyebrow, children }: { title: string; eyebrow: string; children: ReactNode }) { return <div className="quote-step"><Eyebrow light>{eyebrow}</Eyebrow><h1>{title}</h1>{children}</div>; }
+function Choices({ items, selected, onClick }: { items: readonly string[]; selected: string[]; onClick: (value: string) => void }) { return <div className="choices">{items.map((item) => <Choice key={item} label={item} description={descriptions[item]} active={selected.includes(item)} onClick={() => onClick(item)} />)}</div>; }
+function Choice({ label, description, active, onClick }: { label: string; description?: string; active: boolean; onClick: () => void }) { return <button type="button" className={active ? "selected" : ""} onClick={onClick}><span><strong>{label}</strong>{description && <small>{description}</small>}</span><i>{active ? <Check /> : "+"}</i></button>; }
+function Field({ label, children, full = false }: { label: string; children: ReactNode; full?: boolean }) { return <label className={full ? "full" : ""}><span>{label}</span>{children}</label>; }

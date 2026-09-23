@@ -19,7 +19,7 @@ const buttonVariants = cva(
         gold: "bg-gold text-navy border border-gold hover:bg-navy hover:text-cream hover:border-navy",
         navy: "bg-navy text-cream border border-navy hover:bg-cream hover:text-navy hover:border-cream",
         cream: "bg-cream text-navy border border-cream hover:bg-gold hover:border-gold",
-        service: "h-auto justify-start bg-transparent text-foreground hover:text-gold",
+        service: "h-auto justify-start bg-transparent text-inherit hover:text-gold",
       },
       size: {
         default: "h-9 px-4 py-2",

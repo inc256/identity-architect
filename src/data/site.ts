@@ -2,11 +2,34 @@ import novaImage from "@/assets/project-nova.jpg";
 import koraImage from "@/assets/project-kora.jpg";
 import miraImage from "@/assets/project-mira.jpg";
 
-export const services = [
-  { id: "strategy", number: "01", title: "Strategy", line: "Define what the brand stands for.", items: ["Brand Discovery", "Brand Strategy", "Brand Positioning", "Naming", "Brand Messaging"] },
-  { id: "identity", number: "02", title: "Identity", line: "Give the brand a recognizable identity.", items: ["Logo Design", "Visual Identity", "Typography", "Color Systems", "Brand Guidelines"] },
-  { id: "expression", number: "03", title: "Expression", line: "Bring the identity into the real world.", items: ["Marketing Materials", "Packaging", "Business Materials", "Campaign Design", "Brand Collateral"] },
-  { id: "digital", number: "04", title: "Digital", line: "Build the brand’s products and experiences.", items: ["Website Design", "UI/UX Design", "App Development", "Digital Brand Experience", "Landing Pages"] },
+export type ServiceItem = { label: string; detail: string };
+
+export const services: { id: string; number: string; title: string; line: string; items: readonly ServiceItem[] }[] = [
+  { id: "strategy", number: "01", title: "Strategy", line: "Clarify the direction behind the brand.", items: [
+    { label: "Brand Discovery", detail: "Understand the business, audience, challenge, and opportunity." },
+    { label: "Brand Strategy", detail: "Define the brand direction, purpose, and long-term positioning." },
+    { label: "Brand Positioning", detail: "Clarify how the brand should stand apart in the market." },
+    { label: "Naming", detail: "Develop a strong, memorable name and naming strategy for the business or offer." },
+  ] },
+  { id: "identity", number: "02", title: "Identity", line: "Build a recognizable visual system.", items: [
+    { label: "Logo Design", detail: "Create a distinctive symbol that anchors the brand." },
+    { label: "Visual Identity", detail: "Shape the full visual language across typography, color, and imagery." },
+    { label: "Brand Guidelines", detail: "Document how the identity should be used consistently across touchpoints." },
+  ] },
+  { id: "expression", number: "03", title: "Expression", line: "Shape the campaign idea and its expression.", items: [
+    { label: "Campaign Design", detail: "Turn the brand story into campaigns that feel coherent and compelling." },
+  ] },
+  { id: "digital", number: "04", title: "Digital", line: "Extend the brand into digital products.", items: [
+    { label: "Landing Pages", detail: "Create a focused conversion experience for a campaign, offer, or announcement." },
+    { label: "Website Design", detail: "Design a brand-led website that communicates clearly and converts better." },
+    { label: "UI/UX Design", detail: "Map user flows and design digital interfaces that are intuitive and polished." },
+    { label: "E-commerce", detail: "Build an online storefront with product presentation, conversion, and trust cues." },
+    { label: "Web Application", detail: "Design and structure complex browser-based products and customer journeys." },
+    { label: "Android App", detail: "Craft a mobile experience built for Android usability and product goals." },
+    { label: "iOS App", detail: "Design a native iOS experience with strong user experience and clarity." },
+    { label: "Cross-platform App", detail: "Create one consistent product experience across multiple devices and platforms." },
+    { label: "Digital Brand Experience", detail: "Align digital touchpoints into a seamless brand experience across channels." },
+  ] },
 ] as const;
 
 export const projects = [
