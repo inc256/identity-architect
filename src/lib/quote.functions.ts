@@ -7,7 +7,7 @@ const quoteSchema = z.object({
   digitalRequirements: z.array(z.string()), businessName: z.string().min(1), industry: z.string().min(1), website: z.string(), onlinePresence: z.string(),
   projectDescription: z.string().min(10), timeline: z.string().min(1), fullName: z.string().min(2), email: z.string().email(), phone: z.string().min(6), preferredContact: z.string().min(1),
 });
-export const submitQuote = createServerFn({ method: "POST" }).inputValidator((input) => quoteSchema.parse(input)).handler(async ({ data }) => {
+export const submitQuote = createServerFn({ method: "POST" }).validator((input) => quoteSchema.parse(input)).handler(async ({ data }) => {
   const quote = data as QuoteState;
   const estimate = calculateQuote(quote);
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
