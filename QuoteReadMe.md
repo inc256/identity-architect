@@ -91,7 +91,7 @@ All prices are UGX starting prices. The `+` means the final estimate can increas
 
 | Category | Service | Starting from |
 | --- | --- | ---: |
-| Identity | Logo Design | UGX 50,000+ |
+| Identity | Logo Design | UGX 100,000+ |
 | Strategy | Brand Discovery | UGX 800,000+ |
 | Strategy | Brand Strategy | UGX 1,000,000+ |
 | Strategy | Brand Positioning | UGX 800,000+ |

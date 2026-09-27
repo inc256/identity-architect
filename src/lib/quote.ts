@@ -4,7 +4,7 @@ export const pricingConfig = {
   rounding: 50000,
   services: {
     "Brand Discovery": 800000, "Brand Strategy": 1000000, "Brand Positioning": 800000, Naming: 100000,
-    "Logo Design": 50000, "Visual Identity": 1600000, "Brand Guidelines": 800000,
+    "Logo Design": 100000, "Visual Identity": 1600000, "Brand Guidelines": 800000,
     "Campaign Design": 850000,
     "Landing Page": 600000, "Website Design": 1000000, "UI/UX Design": 800000, "E-commerce": 2500000,
     "Web Application": 3000000, "Android App": 800000, "iOS App": 800000, "Cross-platform App": 2000000,
