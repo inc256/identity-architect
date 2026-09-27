@@ -73,6 +73,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "robots", content: "index, follow" },
+      { name: "cache-control", content: "no-store, no-cache, must-revalidate, proxy-revalidate" },
+      { name: "pragma", content: "no-cache" },
+      { name: "expires", content: "0" },
       { title: "CYTIC Branding Agency" },
       { name: "description", content: "CYTIC creates distinct brand identities and digital experiences." },
       { name: "author", content: "CYTIC Branding Agency" },
