@@ -5,30 +5,27 @@ import miraImage from "@/assets/project-mira.jpg";
 export type ServiceItem = { label: string; detail: string };
 
 export const services: { id: string; number: string; title: string; line: string; items: readonly ServiceItem[] }[] = [
-  { id: "strategy", number: "01", title: "Strategy", line: "Clarify the direction behind the brand.", items: [
-    { label: "Brand Discovery", detail: "Understand the business, audience, challenge, and opportunity." },
-    { label: "Brand Strategy", detail: "Define the brand direction, purpose, and long-term positioning." },
-    { label: "Brand Positioning", detail: "Clarify how the brand should stand apart in the market." },
-    { label: "Naming", detail: "Develop a strong, memorable name and naming strategy for the business or offer." },
+  { id: "digital-products", number: "01", title: "Digital Products", line: "Purpose-built business websites, applications, and custom digital products.", items: [
+    { label: "Business Websites", detail: "Professional websites that communicate your value clearly." },
+    { label: "E-commerce Websites", detail: "Online stores built to present products and drive sales." },
+    { label: "Web Applications", detail: "Responsive applications designed around real business workflows." },
+    { label: "Mobile Applications", detail: "Polished mobile experiences for Android and iOS users." },
+    { label: "Custom Digital Products", detail: "Tailored digital solutions built around your specific needs." },
   ] },
-  { id: "identity", number: "02", title: "Identity", line: "Build a recognizable visual system.", items: [
-    { label: "Logo Design", detail: "Create a distinctive symbol that anchors the brand." },
-    { label: "Visual Identity", detail: "Shape the full visual language across typography, color, and imagery." },
-    { label: "Brand Guidelines", detail: "Document how the identity should be used consistently across touchpoints." },
+  { id: "brand-identity-logo-design", number: "02", title: "Brand Identity & Logo Design", line: "Distinctive visual identities and brand communications that keep your business recognizable.", items: [
+    { label: "Logo Design", detail: "A memorable brand mark designed to anchor your identity." },
+    { label: "Campaign Design", detail: "Focused campaign visuals that connect your message with your audience." },
+    { label: "Graphics Design", detail: "Consistent design assets across digital and print touchpoints." },
   ] },
-  { id: "expression", number: "03", title: "Expression", line: "Shape the campaign idea and its expression.", items: [
-    { label: "Campaign Design", detail: "Turn the brand story into campaigns that feel coherent and compelling." },
+  { id: "ui-ux-design", number: "03", title: "UI/UX Design", line: "Clear, intuitive interfaces shaped around user needs and business goals.", items: [
+    { label: "Website UI/UX", detail: "Thoughtful website experiences that guide users with confidence." },
+    { label: "Mobile App UI/UX", detail: "User-centered mobile interfaces designed for clarity and ease." },
+    { label: "Web App UI/UX", detail: "Web application experiences built around efficient workflows." },
+    { label: "Wireframes & Prototypes", detail: "Interactive concepts that validate structure, flow, and direction." },
   ] },
-  { id: "digital", number: "04", title: "Digital", line: "Extend the brand into digital products.", items: [
-    { label: "Landing Pages", detail: "Create a focused conversion experience for a campaign, offer, or announcement." },
-    { label: "Website Design", detail: "Design a brand-led website that communicates clearly and converts better." },
-    { label: "UI/UX Design", detail: "Map user flows and design digital interfaces that are intuitive and polished." },
-    { label: "E-commerce", detail: "Build an online storefront with product presentation, conversion, and trust cues." },
-    { label: "Web Application", detail: "Design and structure complex browser-based products and customer journeys." },
-    { label: "Android App", detail: "Craft a mobile experience built for Android usability and product goals." },
-    { label: "iOS App", detail: "Design a native iOS experience with strong user experience and clarity." },
-    { label: "Cross-platform App", detail: "Create one consistent product experience across multiple devices and platforms." },
-    { label: "Digital Brand Experience", detail: "Align digital touchpoints into a seamless brand experience across channels." },
+  { id: "merchandise-branding", number: "04", title: "Merchandise Branding", line: "Consistent brand applications across promotional products and packaging.", items: [
+    { label: "Promotional Wear", detail: "Branded clothing and apparel that carry your identity outward." },
+    { label: "Packaging & Product Labels", detail: "Packaging and labels designed to make your brand memorable." },
   ] },
 ] as const;
 

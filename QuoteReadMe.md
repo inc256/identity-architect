@@ -1,6 +1,6 @@
 # CYTIC Self-Quote System
 
-The self-quote is an initial project estimate and scoping tool. It is not a final quotation, invoice, contract, or binding commercial offer. The real project value may change during development as the scope, complexity, deliverables, revisions, and requirements become clearer. CYTIC reviews the submitted requirements before preparing a formal proposal.
+The self-quote is an initial project estimate and scoping tool. It is not a final quotation, invoice, contract, or binding commercial offer. The real project value may change as the scope, complexity, deliverables, revisions, quantities, functionality, integrations, and requirements become clearer. CYTIC reviews the submitted requirements before preparing a formal proposal.
 
 ## Core Files
 
@@ -13,65 +13,183 @@ The self-quote is an initial project estimate and scoping tool. It is not a fina
 | Service definitions | `src/data/site.ts` |
 | Database table | `public.quote_requests` |
 
-## Current Quote Flow
+## CYTIC Service Structure
 
-The quote has eight steps. Progress is stored in `step` and displayed as `Step N of 8`.
+The self-quote must use the current four-service structure. Do not expose the previous standalone Strategy, Identity, Naming, Expression, or Digital requirement categories as top-level services.
 
-1. **Business stage**
-   - I'm starting a business
-   - I'm growing an existing business
-   - I'm rebranding
-   - I'm an established company
-   - I'm not sure yet
+### 01 — Digital Products
 
-2. **Strategy**
-   - Brand Discovery
-   - Brand Strategy
-   - Brand Positioning
+**Preview shown before selection:**
+> Websites, e-commerce platforms, web applications, mobile applications, and custom digital products.
 
-3. **Identity**
-   - Logo Design
-   - Visual Identity
-   - Brand Guidelines
+**Services found under this category:**
+- Business Websites
+- E-commerce Websites
+- Web Applications
+- Mobile Applications — Android
+- Mobile Applications — iOS
+- Mobile Applications — Multiplatform
+- Custom Digital Products
 
-4. **Naming and digital requirements**
-   - Naming is selected here when needed.
-   - Digital requirements appear only here, never in the Strategy or Identity steps.
-   - Landing page, Company website, E-commerce, Web application, Android, iOS, Cross-platform, Not sure
+### 02 — Brand Identity & Logo Design
 
-5. **Business information**
+**Preview shown before selection:**
+> Logos, campaign visuals, and graphic design for building a recognizable brand presence.
+
+**Services found under this category:**
+- Logo Design
+- Campaign Design
+- Graphic Design
+
+### 03 — UI/UX Design
+
+**Preview shown before selection:**
+> User interface and experience design for websites, mobile apps, and web applications, from wireframes to prototypes.
+
+**Services found under this category:**
+- Website UI/UX
+- Mobile App UI/UX
+- Web App UI/UX
+- Wireframes & Prototypes
+
+### 04 — Merchandise Branding
+
+**Preview shown before selection:**
+> Branding for promotional wear, packaging, and product labels.
+
+**Services found under this category:**
+- Promotional Wear
+- Packaging & Product Labels
+
+## Service Selection UX
+
+The user must be able to understand what each category contains **before selecting it**.
+
+On the main service-selection screen, each of the four categories should be presented as a service card containing:
+
+1. Service name
+2. Short one-sentence description/preview
+3. A small “Includes” or “Explore” hint listing the relevant sub-services
+4. Starting-price indication where appropriate
+5. Selection control
+
+Example:
+
+```text
+DIGITAL PRODUCTS
+Websites, e-commerce, web apps, mobile apps & custom digital products.
+
+Includes:
+Business Websites · E-commerce · Web Apps · Mobile Apps · Custom Products
+
+Starting from UGX 1,000,000+
+[ Select ]
+```
+
+The preview is informational. The user should not have to select a category merely to discover what services are available inside it.
+
+After selecting a category, show the detailed sub-service choices relevant to that category. The user can select one or multiple sub-services where appropriate.
+
+The UI should not overwhelm the user by displaying every pricing item in a long list before the user chooses a category.
+
+## Recommended Quote Flow
+
+The quote follows the current four-service structure and uses six steps:
+
+1. **Service groups**
+   - Show the four CYTIC service cards with previews before selection.
+   - Allow one or multiple top-level services to be selected.
+
+2. **Service details**
+   - Once a top-level service is selected, reveal its relevant sub-services.
+   - Ask only the scope questions relevant to the selected service.
+   - Keep the service selection and scope state independent so changing one service group does not overwrite another group's answers.
+
+3. **Business information**
    - Industry is always collected.
    - Project description is required and must contain at least 10 characters.
-   - Business name appears only when Naming is selected; it is optional.
-   - Current website appears only when the business stage is not `I'm starting a business` and not `I'm not sure yet`; it is optional and never blocks continuation.
-   - Online presence is not collected.
+   - Business name may be collected when relevant and is optional.
+   - Current website may be collected for existing businesses; it is optional and must never block continuation.
 
-6. **Timeline**
-   - As soon as possible
-   - Within 1 month
-   - 1–3 months
-   - 3+ months
-   - I'm just exploring
+4. **Scope and requirements**
+   - Collect quantities, pages, screens, platforms, features, products, or other scope information only when relevant.
+   - Avoid asking irrelevant questions for services that were not selected.
 
-7. **Contact details**
+5. **Contact details**
    - Full name
    - Email
    - Phone
    - Preferred contact
 
-8. **Estimate**
+6. **Estimate**
    - Starting-from estimate
-   - Possible range when extra scope is detected
-   - Indicative timeline
-   - Selected services
+   - Possible estimate range when additional scope is detected
+   - Automatically calculated service-based delivery range
+   - Selected services and sub-services
    - Estimate disclaimer
    - Request Detailed Proposal action
 
+The progress indicator should reflect the actual implemented number of steps. Do not hard-code `Step N of 6` if the implementation changes the number of steps.
+
+The Business stage is intentionally not part of the quote flow.
+
+## Scope Questions
+
+Scope questions must be conditional. Only show questions that help CYTIC understand the selected service.
+
+### Digital Products
+
+Relevant scope can include:
+- Product type
+- Platform
+- Number of pages or screens
+- Key features
+- E-commerce/product requirements
+- Authentication/accounts
+- Admin/dashboard requirements
+- Integrations
+- Payments
+- Other technical requirements
+
+Do not assume every digital product needs every question.
+
+### Brand Identity & Logo Design
+
+Relevant scope can include:
+- Logo Design
+- Campaign Design
+- Graphic Design
+- Number/type of requested graphics or campaign assets
+- Existing brand information/assets where relevant
+
+### UI/UX Design
+
+Relevant scope can include:
+- Website UI/UX
+- Mobile App UI/UX
+- Web App UI/UX
+- Number of pages/screens
+- Wireframes
+- Prototypes
+- Existing requirements or product documentation where relevant
+
+### Merchandise Branding
+
+Relevant scope can include:
+- Promotional Wear
+- Packaging & Product Labels
+- Quantity
+- Number of designs/variants
+- Product/package type
+- Printing/production requirements when relevant
+
+For merchandise, quantity is particularly important. A displayed starting price is not automatically the final price for a large quantity or complex production requirement.
+
 ## Important State Rules
 
-`QuoteState` is defined in `src/lib/quote.ts` and intentionally does not contain `brandScope` or `onlinePresence`.
+The quote state must represent the new four-service model. Remove obsolete state fields that only supported the previous Strategy/Identity/Naming/Digital structure unless they are required for a specific new scope question.
 
-The database migration still has a legacy required `brand_scope` column. Until that schema is migrated, the server writes `Not selected` to that column for compatibility. It is not shown or used by the client quote flow.
+The quote should retain only data that is actually collected and used by the new flow.
 
 The full active quote is saved in browser `sessionStorage` under:
 
@@ -85,96 +203,125 @@ After successful submission, that key is removed. Confirmation data is written u
 cytic-confirmation
 ```
 
+If the database still contains legacy columns from the previous quote model, they must not control the new client experience. Keep a documented compatibility value only when the database requires it, or migrate the schema safely while preserving historical records.
+
 ## Starting-From Prices
 
-All prices are UGX starting prices. The `+` means the final estimate can increase with complexity, deliverables, functionality, revisions, integrations, and project requirements.
+All prices are UGX starting prices. The `+` means the final estimate can increase depending on scope, complexity, deliverables, quantities, functionality, revisions, integrations, production requirements, and other project requirements.
 
-| Category | Service | Starting from |
-| --- | --- | ---: |
-| Identity | Logo Design | UGX 100,000+ |
-| Strategy | Brand Discovery | UGX 800,000+ |
-| Strategy | Brand Strategy | UGX 1,000,000+ |
-| Strategy | Brand Positioning | UGX 800,000+ |
-| Strategy | Naming | UGX 100,000+ |
-| Identity | Visual Identity | UGX 1,600,000+ |
-| Identity | Brand Guidelines | UGX 800,000+ |
-| Expression | Campaign Design | UGX 850,000+ |
-| Digital | Landing Page | UGX 600,000+ |
-| Digital | Website Design | UGX 1,000,000+ |
-| Digital | UI/UX Design | UGX 800,000+ |
-| Digital | E-commerce | UGX 2,500,000+ |
-| Digital | Web Application | UGX 3,000,000+ |
-| Digital | Android App | UGX 800,000+ |
-| Digital | iOS App | UGX 800,000+ |
-| Digital | Cross-platform App | UGX 2,000,000+ |
-| Digital | Digital Brand Experience | UGX 1,000,000+ |
+### 01 — Digital Products
 
-Removed from selectable quote services:
+| Service | Starting From |
+| --- | ---: |
+| Business Websites | UGX 1,200,000+ |
+| E-commerce Websites | UGX 2,000,000+ |
+| Web Applications | UGX 1,000,000+ |
+| Mobile Applications — Android | UGX 1,000,000+ |
+| Mobile Applications — iOS | UGX 1,000,000+ |
+| Mobile Applications — Multiplatform | UGX 2,000,000+ |
+| Custom Digital Products | UGX 3,000,000+ |
 
-- Brand Messaging
-- Business Materials
-- Marketing Materials
-- Packaging
-- Brand Collateral
+### 02 — Brand Identity & Logo Design
 
-## Calculation
+| Service | Starting From |
+| --- | ---: |
+| Logo Design | UGX 100,000+ |
+| Campaign Design | UGX 400,000+ |
+| Graphic Design | UGX 50,000+ |
 
-The current engine is additive, not package-multiplier based:
+### 03 — UI/UX Design
+
+| Service | Starting From |
+| --- | ---: |
+| Website UI/UX | UGX 500,000+ |
+| Mobile App UI/UX | UGX 800,000+ |
+| Web App UI/UX | UGX 500,000+ |
+| Wireframes & Prototypes | UGX 600,000+ |
+
+### 04 — Merchandise Branding
+
+| Service | Starting From |
+| --- | ---: |
+| Promotional Wear | UGX 30,000+ |
+| Packaging & Product Labels | UGX 50,000+ |
+
+## Pricing Rules
+
+The pricing engine must use the prices above as the current starting-price source of truth.
+
+Do not retain the previous pricing items such as Brand Discovery, Brand Strategy, Brand Positioning, Naming, Visual Identity, Brand Guidelines, Landing Page, Digital Brand Experience, or the old Digital requirement prices as selectable services.
+
+A selectable service must never be missing from the pricing configuration.
+
+The `+` symbol is important: these are starting prices, not fixed package prices.
+
+### Digital Products
+
+Digital product pricing should begin with the selected product type and then account for scope and complexity. The quote should be able to increase the estimate when requirements such as additional pages/screens, functionality, integrations, authentication, dashboards, payments, or other technical requirements are identified.
+
+### Brand Identity & Logo Design
+
+Pricing starts from the selected design service. If the user requests multiple design services or a larger quantity of campaign/graphic assets, the estimate may increase according to scope.
+
+### UI/UX Design
+
+Pricing starts from the selected UI/UX service. The estimate may increase according to the number of screens/pages, complexity, flows, prototype requirements, and other project requirements.
+
+### Merchandise Branding
+
+Merchandise pricing must account for quantity and scope. The displayed starting prices are entry points, not per-project guarantees.
+
+For example, Promotional Wear starts from UGX 30,000+, but the final estimate may depend on the quantity, garment/product type, number of designs, branding method, and production requirements.
+
+## Calculation Model
+
+The previous calculation model used separate Strategy, Identity, and Digital totals with a minimum project value. That model is obsolete for the new CYTIC service structure.
+
+The new calculation model should be scope-aware:
 
 ```text
-serviceStartingTotal = sum(selected service prices)
-digitalStartingTotal = sum(selected digital requirement prices)
-rawAmount = max(UGX 1,800,000, serviceStartingTotal + digitalStartingTotal)
-startingFrom = round rawAmount up to the nearest UGX 50,000
+selectedItems = selected sub-services
+baseStartingTotal = sum(starting prices for selected sub-services)
+scopeAdjustments = calculated from relevant scope/quantity/complexity questions
+rawEstimate = baseStartingTotal + scopeAdjustments
+startingFrom = round according to the configured pricing rules
 ```
 
-Current digital requirement starting prices:
+Do not introduce a new arbitrary minimum project price unless CYTIC explicitly decides on one.
 
-- Landing page: UGX 600,000
-- Company website: UGX 1,000,000
-- E-commerce: UGX 2,500,000
-- Web application: UGX 3,000,000
-- Android: UGX 800,000
-- iOS: UGX 800,000
-- Cross-platform: UGX 2,000,000
-- Not sure: no additional starting price
+The estimate should never be reduced simply because multiple services are selected. Any package discount or bundled pricing must be an explicit CYTIC commercial rule rather than an automatic assumption.
 
-The engine also adds a provisional upper-range buffer when multiple digital requirements or more than four services are selected. This is a temporary scope signal until dedicated complexity and deliverable questions are added.
-
-Timeline is indicative only. It uses a base duration, selected digital complexity, and service count. It must not be treated as a promised delivery date.
+The server remains the source of truth and must recalculate the estimate from validated selections and scope data.
 
 ## Service Completion Durations
 
-The estimate step lists every selected service and its individual duration. The project completion range is calculated by summing the minimum and maximum duration for all selected services and digital requirements.
+Delivery ranges are calculated from the selected top-level service and are displayed as indicative ranges. The range must be stored in the same pricing configuration as the service and shown consistently on the estimate.
 
-| Category | Service | Minimum | Maximum |
-| --- | --- | --- | --- |
-| Identity | Logo Design | 5 days | 2 weeks |
-| Strategy | Brand Discovery | 3 days | 1 week |
-| Strategy | Brand Strategy | 3 days | 1 week |
-| Strategy | Brand Positioning | 3 days | 1 week |
-| Strategy | Naming | 2 days | 5 days |
-| Identity | Visual Identity | 1 week | 2 weeks |
-| Identity | Brand Guidelines | 2 days | 5 days |
-| Expression | Campaign Design | 2 days | 5 days |
-| Digital | Landing Page | 1 week | 2 weeks |
-| Digital | Website Design | 2 weeks | 3 months |
-| Digital | UI/UX Design | 2 weeks | 4 weeks |
-| Digital | E-commerce | 1 month | 3 months |
-| Digital | Web Application | 3 weeks | 3 months |
-| Digital | Android App | 3 weeks | 3 months |
-| Digital | iOS App | 3 weeks | 3 months |
-| Digital | Cross-platform App | 1 month | 6 months |
-| Digital | Digital Brand Experience | 3 weeks | 2 months |
+| Service | Delivery range |
+| --- | --- |
+| Digital Products | 3 weeks to 3 months |
+| Brand Identity & Logo Design | 3 days to 2 weeks |
+| UI/UX Design | 1 week to 1 month |
+| Merchandise Branding | 3 days to 2 weeks |
 
-The source of truth is `pricingConfig.durations` in `src/lib/quote.ts`. Durations are stored internally as day values so ranges can be added consistently. The UI keeps short durations readable: fewer than 7 days remain days, durations below a month remain weeks and days, 28 days is shown as 1 month, and longer durations are shown as months plus remaining days. Durations of 12 months or more are shown as years plus any remaining months or days.
+The Business stage and user-selected timeline are no longer part of the quote flow. Clients do not choose a delivery window; the application determines the relevant range automatically from the selected service.
 
-The estimate displays:
+## Estimate Display
 
-- Every selected service and digital requirement
-- The price for each selected item
-- The minimum and maximum duration for each item
-- The combined minimum and maximum project completion range
+The estimate page should show:
+
+- Quote ID
+- Selected top-level services
+- Selected sub-services
+- Starting price for each selected item
+- Scope-based adjustments where appropriate
+- Starting-from estimate or estimate range
+- Indicative timeline only when a valid duration model is configured
+- Next steps
+- Estimate disclaimer
+- Request Detailed Proposal action
+
+The estimate should be easy for a client to understand without requiring them to know CYTIC's internal pricing logic.
 
 ## Server and Database Flow
 
@@ -185,7 +332,9 @@ submitQuote()
         ↓
 Zod server validation
         ↓
-Server recalculates price and timeline
+Server validates selected services and scope
+        ↓
+Server recalculates price from current pricing configuration
         ↓
 Supabase insert into public.quote_requests
         ↓
@@ -196,7 +345,20 @@ Confirmation data returned
 
 The server is the source of truth. Never trust a price or estimate sent by the browser.
 
-The saved record includes client details, business context, selected services, digital requirements, timeline preference, estimated price, estimated weeks, pricing version, status, and timestamps. New records start with `New`.
+The saved record should include, where applicable:
+
+- Client details
+- Business context
+- Selected top-level services
+- Selected sub-services
+- Scope/requirements
+- Estimated price
+- Estimated delivery range
+- Pricing version
+- Status
+- Timestamps
+
+New records start with `New`.
 
 Supported statuses:
 
@@ -206,29 +368,45 @@ Supported statuses:
 
 ### Change a price
 
-1. Update the matching value in `pricingConfig.services` or `pricingConfig.digitalRequirements` in `src/lib/quote.ts`.
+1. Update the matching value in the pricing configuration in `src/lib/quote.ts`.
 2. Update the price table in this document.
 3. Increment `PRICING_VERSION`.
 4. Test the estimate and confirmation download.
 
-### Add a selectable service
+### Add a selectable sub-service
 
-1. Add it to the appropriate list in `src/data/site.ts`.
-2. Add its starting price to `pricingConfig.services`.
-3. Add any digital detection or requirement rules.
-4. Update the server validation if the data shape changes.
-5. Update this document.
-6. Test one-service and multi-service quotes.
+1. Add it under the correct top-level service in `src/data/site.ts`.
+2. Add its starting price to the pricing configuration.
+3. Add its preview/description if it is displayed in the service-selection UI.
+4. Add relevant scope questions if required.
+5. Update server validation if the data shape changes.
+6. Update this document.
+7. Test one-service and multi-service quotes.
 
-A selectable service must never be missing from the pricing configuration.
+A selectable sub-service must never be missing from the pricing configuration.
+
+### Change a service preview
+
+Keep the preview short and client-friendly. It should explain what the category contains before selection without becoming a full service description.
+
+For example:
+
+```text
+DIGITAL PRODUCTS
+Websites, e-commerce, web apps, mobile apps & custom digital products.
+```
+
+The preview should remain aligned with the actual selectable sub-services.
 
 ### Change conditional fields
 
-Update all three together:
+Update all relevant layers together:
 
-- UI conditions and `valid()` in `src/routes/quote.index.tsx`
+- UI conditions and validation in `src/routes/quote.index.tsx`
 - `QuoteState` and `emptyQuote` in `src/lib/quote.ts`
 - `quoteSchema` and database mapping in `src/lib/quote.functions.ts`
+- Service definitions in `src/data/site.ts` when applicable
+- This README
 
 ### Remove a field permanently
 
@@ -236,15 +414,25 @@ Remove it from client state, validation, submission mapping, confirmation render
 
 ### Change the estimate model
 
-Update `calculateQuote()`, increment `PRICING_VERSION`, update the confirmation/download wording, and test the minimum, rounding, additive digital requirements, multiple services, and incomplete input.
+Update `calculateQuote()`, increment `PRICING_VERSION`, update the confirmation/download wording, and test:
+
+- One selected service
+- Multiple selected services
+- One sub-service
+- Multiple sub-services
+- Quantity-based merchandise estimates
+- Scope adjustments
+- Missing/incomplete input
+- Price rounding
+- Confirmation/download
 
 ## Confirmation Rules
 
-The confirmation page shows the quote ID, starting-from estimate, indicative timeline, selected services, next steps, and a downloadable text estimate.
+The confirmation page shows the quote ID, estimate, selected services/sub-services, next steps, and a downloadable estimate.
 
 Every confirmation and download must state:
 
-> This is an estimate based on the information provided. The real project value may change during development as the scope, complexity, deliverables, revisions, and requirements become clearer. It is not a final quotation or contract. CYTIC will review your requirements before preparing a detailed proposal.
+> This is an estimate based on the information provided. The real project value may change as the scope, complexity, deliverables, revisions, quantities, functionality, integrations, and requirements become clearer. It is not a final quotation or contract. CYTIC will review your requirements before preparing a detailed proposal.
 
 ## Verification Checklist
 
@@ -252,26 +440,31 @@ After quote changes:
 
 1. Run `npm run build`.
 2. Open `/quote`.
-3. Confirm the eight-step flow and progress indicator.
-4. Confirm Strategy, Identity, and Naming are separate from Digital.
-5. Confirm Digital requirements appear only on step 4.
-6. Select Naming and confirm Business Name appears on step 5.
-7. Do not select Naming and confirm Business Name is absent.
-8. Choose startup or not sure and confirm Current Website is absent.
-9. Choose growing, rebranding, or established and confirm Current Website appears.
-10. Confirm Online Presence is absent.
-11. Test one and multiple digital requirements.
-12. Verify starting-from estimate, range, timeline, and disclaimer.
-13. Submit with Supabase configured and verify confirmation/download.
-14. Verify the saved pricing version.
+3. Confirm the current four top-level services are displayed.
+4. Confirm every top-level service has a useful preview before selection.
+5. Confirm the preview accurately reflects the sub-services available inside the category.
+6. Select Digital Products and verify all seven digital product options are available.
+7. Select Brand Identity & Logo Design and verify Logo Design, Campaign Design, and Graphic Design.
+8. Select UI/UX Design and verify Website UI/UX, Mobile App UI/UX, Web App UI/UX, and Wireframes & Prototypes.
+9. Select Merchandise Branding and verify Promotional Wear and Packaging & Product Labels.
+10. Confirm obsolete Strategy, Identity, Naming, Expression, Landing Page, and Digital Brand Experience selections are absent.
+11. Confirm the displayed starting prices match the current pricing table.
+12. Confirm merchandise scope/quantity questions appear when relevant.
+13. Confirm irrelevant scope questions remain hidden.
+14. Test one service and multiple services.
+15. Verify the estimate is recalculated on the server.
+16. Verify the estimate disclaimer is shown.
+17. Submit with Supabase configured and verify confirmation/download.
+18. Verify the saved pricing version.
 
 ## Commercial Safety Rules
 
 - Prices are starting estimates, not guaranteed final costs.
 - The self-quote is not a final quotation or contract.
-- Recalculate on the server.
+- Recalculate prices on the server.
 - Version commercial pricing changes.
 - Never silently alter historical pricing rules.
 - Keep service labels consistent across UI, pricing, server, database, and this document.
 - Complex projects must be allowed to exceed displayed starting prices.
+- Merchandise estimates must account for quantity and production scope where applicable.
 - Final scope and price are confirmed in the formal proposal.

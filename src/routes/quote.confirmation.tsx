@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Page, Eyebrow } from "@/components/site/SiteShell";
 import { formatUGX } from "@/lib/quote";
 
-type Confirmation = { quote_id: string; estimated_price: number; estimated_weeks_min: number; estimated_weeks_max: number; selectedServices: string[]; businessName: string; confirmation_status?: string; email_sent?: boolean; contact_email?: string | null };
+type Confirmation = { quote_id: string; estimated_price: number; estimated_weeks_min: number; estimated_weeks_max: number; selectedServices: string[]; selectedSubServices: string[]; businessName: string; confirmation_status?: string; email_sent?: boolean; contact_email?: string | null };
 
 export const Route = createFileRoute("/quote/confirmation")({
-  head: () => ({ meta: [{ title: "Quote Received — CYTIC Branding Agency" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Quote Received — CYTIC CREATIVES" }, { name: "robots", content: "noindex" }] }),
   component: ConfirmationPage,
 });
 
@@ -17,7 +17,7 @@ function ConfirmationPage() {
   useEffect(() => { try { const saved = sessionStorage.getItem("cytic-confirmation"); if (saved) setData(JSON.parse(saved)); } catch { /* Ignore invalid session data. */ } }, []);
   const download = () => {
     if (!data) return;
-    const text = `CYTIC BRANDING AGENCY\nESTIMATE — NOT A FINAL CONTRACT\n\nQuote ID: ${data.quote_id}\nBusiness: ${data.businessName}\nEstimated investment: ${formatUGX(data.estimated_price)}\nEstimated timeline: ${data.estimated_weeks_min}–${data.estimated_weeks_max} weeks\n\nSelected services:\n${data.selectedServices.map((item) => `- ${item}`).join("\n")}\n\nThis is an estimate based on the information provided. The real project value may change during development as the scope, complexity, deliverables, revisions, and requirements become clearer. Final pricing and timeline will be confirmed after CYTIC review.`;
+    const text = `CYTIC CREATIVES\nESTIMATE — NOT A FINAL CONTRACT\n\nQuote ID: ${data.quote_id}\nBusiness: ${data.businessName}\nEstimated investment: ${formatUGX(data.estimated_price)}+\n\nSelected services:\n${data.selectedServices.map((service) => `- ${service}`).join("\n")}\n\nSelected sub-services:\n${data.selectedSubServices.map((item) => `- ${item}`).join("\n")}\n\nThis is an estimate based on the information provided. The real project value may change as the scope, complexity, deliverables, quantities, functionality, integrations, and requirements become clearer. It is not a final quotation or contract. CYTIC will review your requirements before preparing a detailed proposal.`;
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
     const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${data.quote_id}-estimate.txt`; anchor.click(); URL.revokeObjectURL(url);
   };
