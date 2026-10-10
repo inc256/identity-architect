@@ -1,2 +1,63 @@
-import { createFileRoute } from "@tanstack/react-router";import { Page,Eyebrow,CTA } from "@/components/site/SiteShell";
-export const Route=createFileRoute("/about")({head:()=>({meta:[{title:"About CYTIC CREATIVES"},{name:"description",content:"CYTIC CREATIVES is a subsidiary of Namielus Group Limited, creating digital products, vibrant brands, and connected experiences."},{property:"og:title",content:"About CYTIC CREATIVES"},{property:"og:description",content:"A subsidiary of Namielus Group Limited."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}],links:[{rel:"canonical",href:"/about"}]}),component:About});function About(){const facts=[["Purpose","Turn ideas into useful, distinctive digital experiences."],["Vision","Create meaningful products and brands that help businesses grow."],["Mission","Deliver practical design and development from first impression through everyday use."],["Personality","Bold. Professional. Human."],["Differentiation","Quality work built as complete systems, with careful attention to detail."]];return <Page><section className="page-intro"><div className="site-container"><Eyebrow>About CYTIC CREATIVES</Eyebrow><h1 className="display-xl">Digital products and brands<br/>with a clear point of view.</h1><p>CYTIC CREATIVES is a subsidiary of Namielus Group Limited. We create digital products, digital presence experiences, and brand applications that help businesses stand out and work smoothly.</p></div></section><section className="cream-section"><div className="site-container fact-list">{facts.map(([a,b])=><article key={a}><Eyebrow>{a}</Eyebrow><h2>{b}</h2></article>)}</div></section><section><div className="site-container py-24 lg:py-32"><Eyebrow>Our approach</Eyebrow><h2 className="display-lg mt-6">Thoughtful by design.</h2><div className="principle-grid">{[["Clarity","A strong digital product or brand knows exactly what it needs to communicate."],["Usability","Meaningful experiences should be intuitive, responsive, and easy to use."],["Consistency","A clear system should remain recognizable wherever it appears."]].map(([a,b],i)=><article key={a}><span>0{i+1}</span><h3>{a}</h3><p>{b}</p></article>)}</div></div></section><CTA/></Page>}
+import { createFileRoute } from "@tanstack/react-router";
+import { CTA, Eyebrow, Page } from "@/components/site/SiteShell";
+
+const principles = [
+  ["Clarity", "Clear ideas. Clear communication."],
+  ["Usability", "Useful, intuitive digital experiences."],
+  ["Consistency", "Connected brand experiences at every touchpoint."],
+];
+
+export const Route = createFileRoute("/about")({
+  head: () => ({
+    meta: [
+      { title: "About CYTIC CREATIVES" },
+      {
+        name: "description",
+        content: "CYTIC CREATIVES creates thoughtful digital products and distinctive brands.",
+      },
+      { property: "og:title", content: "About CYTIC CREATIVES" },
+      {
+        property: "og:description",
+        content: "Thoughtful digital products and distinctive brands.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "/about" }],
+  }),
+  component: About,
+});
+
+function About() {
+  return (
+    <Page>
+      <section className="page-intro">
+        <div className="site-container">
+          <Eyebrow>About CYTIC CREATIVES</Eyebrow>
+          <h1 className="display-xl">
+            Thoughtful digital.
+            <br />
+            Distinctive brands.
+          </h1>
+          <p>We create digital products and brand systems that help businesses move forward.</p>
+        </div>
+      </section>
+      <section className="cream-section">
+        <div className="site-container py-16 lg:py-24">
+          <Eyebrow>Our approach</Eyebrow>
+          <h2 className="display-lg mt-6">Thoughtful by design.</h2>
+          <div className="principle-grid">
+            {principles.map(([title, description], index) => (
+              <article key={title}>
+                <span>0{index + 1}</span>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+      <CTA />
+    </Page>
+  );
+}

@@ -16,6 +16,8 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProcessRouteImport } from './routes/process'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as QuoteIndexRouteImport } from './routes/quote.index'
 import { Route as QuoteConfirmationRouteImport } from './routes/quote.confirmation'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap.[.]xml'
@@ -57,6 +59,16 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuoteIndexRoute = QuoteIndexRouteImport.update({
   id: '/quote/',
   path: '/quote/',
@@ -91,9 +103,11 @@ export interface FileRoutesByFullPath {
   '/process': typeof ProcessRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/quote/confirmation': typeof QuoteConfirmationRoute
   '/sitemap/.xml': typeof SitemapDotxmlRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/quote/': typeof QuoteIndexRoute
   '/work/': typeof WorkIndexRoute
 }
@@ -105,9 +119,11 @@ export interface FileRoutesByTo {
   '/process': typeof ProcessRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/quote/confirmation': typeof QuoteConfirmationRoute
   '/sitemap/.xml': typeof SitemapDotxmlRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/quote': typeof QuoteIndexRoute
   '/work': typeof WorkIndexRoute
 }
@@ -120,9 +136,11 @@ export interface FileRoutesById {
   '/process': typeof ProcessRoute
   '/services': typeof ServicesRoute
   '/terms': typeof TermsRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/quote/confirmation': typeof QuoteConfirmationRoute
   '/sitemap/.xml': typeof SitemapDotxmlRoute
   '/work/$slug': typeof WorkSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/quote/': typeof QuoteIndexRoute
   '/work/': typeof WorkIndexRoute
 }
@@ -136,9 +154,11 @@ export interface FileRouteTypes {
     | '/process'
     | '/services'
     | '/terms'
+    | '/blog/$slug'
     | '/quote/confirmation'
     | '/sitemap/.xml'
     | '/work/$slug'
+    | '/blog/'
     | '/quote/'
     | '/work/'
   fileRoutesByTo: FileRoutesByTo
@@ -150,9 +170,11 @@ export interface FileRouteTypes {
     | '/process'
     | '/services'
     | '/terms'
+    | '/blog/$slug'
     | '/quote/confirmation'
     | '/sitemap/.xml'
     | '/work/$slug'
+    | '/blog'
     | '/quote'
     | '/work'
   id:
@@ -164,9 +186,11 @@ export interface FileRouteTypes {
     | '/process'
     | '/services'
     | '/terms'
+    | '/blog/$slug'
     | '/quote/confirmation'
     | '/sitemap/.xml'
     | '/work/$slug'
+    | '/blog/'
     | '/quote/'
     | '/work/'
   fileRoutesById: FileRoutesById
@@ -179,9 +203,11 @@ export interface RootRouteChildren {
   ProcessRoute: typeof ProcessRoute
   ServicesRoute: typeof ServicesRoute
   TermsRoute: typeof TermsRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   QuoteConfirmationRoute: typeof QuoteConfirmationRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WorkSlugRoute: typeof WorkSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   QuoteIndexRoute: typeof QuoteIndexRoute
   WorkIndexRoute: typeof WorkIndexRoute
 }
@@ -237,6 +263,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quote/': {
       id: '/quote/'
       path: '/quote'
@@ -283,9 +323,11 @@ const rootRouteChildren: RootRouteChildren = {
   ProcessRoute: ProcessRoute,
   ServicesRoute: ServicesRoute,
   TermsRoute: TermsRoute,
+  BlogSlugRoute: BlogSlugRoute,
   QuoteConfirmationRoute: QuoteConfirmationRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WorkSlugRoute: WorkSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   QuoteIndexRoute: QuoteIndexRoute,
   WorkIndexRoute: WorkIndexRoute,
 }

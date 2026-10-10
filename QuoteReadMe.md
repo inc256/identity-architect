@@ -345,6 +345,34 @@ Confirmation data returned
 
 The server is the source of truth. Never trust a price or estimate sent by the browser.
 
+`submitQuote()` validates and recalculates the request on the server, then inserts
+through the server-only Supabase client. `SUPABASE_SERVICE_ROLE_KEY` must remain
+in server environment configuration and must never use a `VITE_` prefix. The
+insert does not read the saved row back or expose its generated quote ID; the
+confirmation only includes the server-calculated estimate. Status is fixed to
+`New`.
+
+The existing table also requires the legacy `business_stage` and `timeline`
+columns. Since the current flow does not ask for a business stage or client
+chosen timeline, new rows store `Not provided` for `business_stage` and the
+automatically calculated indicative delivery range in `timeline`. Optional
+business names use `Not provided` only to satisfy the table's non-null
+constraint.
+
+`submitQuote()` validates and recalculates the request on the server, then inserts
+through the server-only Supabase client. `SUPABASE_SERVICE_ROLE_KEY` must remain
+in server environment configuration and must never use a `VITE_` prefix. The
+server selects only the generated quote ID and estimate fields from its own
+insert for the immediate confirmation; the anonymous browser client does not
+read quote-request rows. Status is fixed to `New`.
+
+The existing table also requires the legacy `business_stage` and `timeline`
+columns. Since the current flow does not ask for a business stage or client
+chosen timeline, new rows store `Not provided` for `business_stage` and the
+automatically calculated indicative delivery range in `timeline`. Optional
+business names use `Not provided` only to satisfy the table's non-null
+constraint.
+
 The saved record should include, where applicable:
 
 - Client details

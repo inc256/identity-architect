@@ -36,7 +36,12 @@ export type QuoteState = {
   projectDescription: string;
   projectType: string;
   platform: string;
-  scopeDetails: string;
+  scopeDetails: {
+    "digital-products": string;
+    "brand-identity-logo-design": string;
+    "ui-ux-design": string;
+    "merchandise-branding": string;
+  };
   quantity: string;
   fullName: string;
   email: string;
@@ -53,7 +58,12 @@ export const emptyQuote: QuoteState = {
   projectDescription: "",
   projectType: "",
   platform: "",
-  scopeDetails: "",
+  scopeDetails: {
+    "digital-products": "",
+    "brand-identity-logo-design": "",
+    "ui-ux-design": "",
+    "merchandise-branding": "",
+  },
   quantity: "",
   fullName: "",
   email: "",
@@ -66,26 +76,52 @@ export function getSelectedQuoteItems(q: QuoteState) {
 }
 
 export function getQuoteItemPrice(item: string) {
-  return pricingConfig.services[item as keyof typeof pricingConfig.services] ?? 0;
+  const price = pricingConfig.services[item as keyof typeof pricingConfig.services];
+  if (price === undefined) {
+    throw new Error(`Missing starting price for quote service "${item}".`);
+  }
+  return price;
 }
 
 export function calculateQuote(q: QuoteState) {
-  const selectedTotal = q.selectedSubServices.reduce((sum, item) => sum + getQuoteItemPrice(item), 0);
-  const scopeAdjustment = q.selectedServices.includes("Merchandise Branding") && q.quantity ? Math.max(0, Number(q.quantity) - 1) * 50000 : 0;
-  const amount = Math.ceil((selectedTotal + scopeAdjustment) / pricingConfig.rounding) * pricingConfig.rounding;
-  const upperEstimate = amount + (q.selectedSubServices.length > 1 ? 500000 : 0);
+  const selectedTotal = q.selectedSubServices.reduce(
+    (sum, item) => sum + getQuoteItemPrice(item),
+    0,
+  );
+  const quantity = /^\d+$/.test(q.quantity) ? Number(q.quantity) : Number.NaN;
+  const scopeAdjustment =
+    q.selectedServices.includes("Merchandise Branding") &&
+    Number.isSafeInteger(quantity) &&
+    quantity > 1
+      ? (quantity - 1) * 50000
+      : 0;
+  const amount =
+    Math.ceil((selectedTotal + scopeAdjustment) / pricingConfig.rounding) * pricingConfig.rounding;
   const selectedItems = getSelectedQuoteItems(q);
   const durations = q.selectedServices
     .map((service) => pricingConfig.timelines[service as keyof typeof pricingConfig.timelines])
     .filter((duration): duration is NonNullable<typeof duration> => Boolean(duration));
-  const estimatedDaysMin = durations.length ? Math.max(...durations.map((duration) => duration.minDays)) : 0;
-  const estimatedDaysMax = durations.length ? Math.max(...durations.map((duration) => duration.maxDays)) : 0;
+  const estimatedDaysMin = durations.length
+    ? Math.max(...durations.map((duration) => duration.minDays))
+    : 0;
+  const estimatedDaysMax = durations.length
+    ? Math.max(...durations.map((duration) => duration.maxDays))
+    : 0;
 
-  return { amount, startingFrom: amount, selectedTotal, upperEstimate, selectedItems, scopeAdjustment, estimatedDaysMin, estimatedDaysMax };
+  return {
+    amount,
+    startingFrom: amount,
+    selectedTotal,
+    selectedItems,
+    scopeAdjustment,
+    estimatedDaysMin,
+    estimatedDaysMax,
+  };
 }
 
 export const formatUGX = (amount: number) => `UGX ${new Intl.NumberFormat("en-UG").format(amount)}`;
 export const formatDuration = (days: number) => {
-  if (days >= 30) return `${Math.round(days / 7)} month${Math.round(days / 7) === 1 ? "" : "s"}`;
+  if (days >= 30 && days % 30 === 0) return `${days / 30} month${days === 30 ? "" : "s"}`;
+  if (days >= 7 && days % 7 === 0) return `${days / 7} week${days === 7 ? "" : "s"}`;
   return `${days} day${days === 1 ? "" : "s"}`;
 };
