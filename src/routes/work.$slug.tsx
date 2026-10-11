@@ -103,6 +103,10 @@ function Work() {
     <Page>
       <article className="project-detail-page">
         <div className="site-container">
+          <Link to="/work" className="project-detail-back">
+            <ArrowLeft aria-hidden="true" />
+            Back to work
+          </Link>
           <section className="project-detail-card" aria-label={`${project.title} project details`}>
             <div className="product-gallery">
               {featuredImagePath ? (
@@ -176,7 +180,7 @@ function Work() {
                   </Button>
                 )}
                 {settings.show_quote !== false && (
-                  <Button asChild variant={projectUrl ? "outline" : "navy"} size="xl">
+                  <Button asChild variant="outline" size="xl">
                     <Link to="/quote">
                       Discuss a similar project <ArrowUpRight />
                     </Link>

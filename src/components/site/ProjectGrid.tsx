@@ -4,8 +4,6 @@ import { ArrowUpRight } from "lucide-react";
 import { getPublicImageUrl, type PortfolioProject } from "@/lib/cms";
 
 type ProjectPreview = {
-  orientation: "portrait" | "landscape";
-  aspectRatio: number;
   failed?: boolean;
 };
 
@@ -23,62 +21,28 @@ export function ProjectGrid({
       <p className="empty-state">No projects have been published yet. Please check back soon.</p>
     );
 
-  const portraitProjects = projects.filter(
-    (project) => previews[project.id]?.orientation === "portrait",
-  );
-  const landscapeProjects = projects.filter(
-    (project) =>
-      (!project.image_paths[0] && !previews[project.id]) ||
-      previews[project.id]?.orientation === "landscape",
-  );
-  const pendingProjects = projects.filter(
-    (project) => project.image_paths[0] && !previews[project.id],
-  );
-
-  const renderProject = (project: PortfolioProject, pending = false) => {
+  const renderProject = (project: PortfolioProject) => {
     const cover = project.image_paths[0];
     const preview = previews[project.id];
-    const orientation = preview?.orientation;
 
     return (
       <Link
         key={project.id}
         to="/work/$slug"
         params={{ slug: project.slug }}
-        className={`project-card ${pending ? "project-card-pending" : `project-card-${orientation ?? "landscape"}`}`}
+        className="project-card"
       >
-        <div
-          className="project-image"
-          style={{
-            aspectRatio: preview?.aspectRatio
-              ? `${preview.aspectRatio}`
-              : cover && !pending
-                ? "3 / 2"
-                : undefined,
-          }}
-        >
+        <div className="project-image">
           {cover && !preview?.failed ? (
             <img
               src={getPublicImageUrl("portofio-images", cover)}
               alt={`${project.title} project`}
               loading="lazy"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              onLoad={(event) => {
-                const { naturalWidth, naturalHeight } = event.currentTarget;
-                setPreviews((current) => ({
-                  ...current,
-                  [project.id]: {
-                    orientation: naturalHeight > naturalWidth ? "portrait" : "landscape",
-                    aspectRatio: naturalWidth / naturalHeight,
-                  },
-                }));
-              }}
+              sizes="(max-width: 479px) 100vw, (max-width: 767px) 50vw, (max-width: 1024px) 33vw, 25vw"
               onError={() => {
                 setPreviews((current) => ({
                   ...current,
                   [project.id]: {
-                    orientation: "landscape",
-                    aspectRatio: 3 / 2,
                     failed: true,
                   },
                 }));
@@ -104,25 +68,7 @@ export function ProjectGrid({
 
   return (
     <div className={all ? "project-grid-groups project-grid-all" : "project-grid-groups"}>
-      {pendingProjects.length > 0 && (
-        <div className="project-grid project-grid-pending" aria-label="Loading project previews">
-          {pendingProjects.map((project) => renderProject(project, true))}
-        </div>
-      )}
-      {landscapeProjects.length > 0 && (
-        <section className="project-orientation-section" aria-label="Landscape projects">
-          <div className="project-grid project-grid-landscape">
-            {landscapeProjects.map(renderProject)}
-          </div>
-        </section>
-      )}
-      {portraitProjects.length > 0 && (
-        <section className="project-orientation-section" aria-label="Portrait projects">
-          <div className="project-grid project-grid-portrait">
-            {portraitProjects.map(renderProject)}
-          </div>
-        </section>
-      )}
+      <div className="project-grid project-grid-mixed">{projects.map(renderProject)}</div>
     </div>
   );
 }
