@@ -23,6 +23,14 @@ the application.
   source code, client bundles, or logs.
 - `VITE_SUPABASE_PROJECT_ID` is optional and is not used by the site client.
 
+## Vercel deployment
+
+Build from the repository root with `npm run build`. The Nitro Vite plugin
+detects Vercel's build environment and generates `.vercel/output` with the
+server function and static assets. Keep that generated directory out of Git;
+deployments should build it from the current source rather than reuse a
+checked-in output directory.
+
 The tracked `.env` file has been removed from Git and ignored. If it was
 previously committed, rotate any private key that was ever present in it.
 
