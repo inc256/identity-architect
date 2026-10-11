@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /quote/confirmation
-Sitemap: /sitemap.xml
