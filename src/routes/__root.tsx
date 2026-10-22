@@ -12,6 +12,8 @@ import type { ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { ContentLoading } from "@/components/site/ContentLoading";
 import { Page } from "@/components/site/SiteShell";
+import logoMark from "@/assets/CYTIC_Logo_512p.png";
+import logoText from "@/assets/CYTIC_Logo_Text_512p.png";
 import { getWebsiteSettings } from "@/lib/cms";
 import { WebsiteSettingsContext } from "@/lib/website-settings";
 
@@ -19,10 +21,14 @@ function NotFoundComponent() {
   return (
     <Page>
       <div className="site-status-content bg-background px-4">
-        <div className="max-w-md text-center">
-          <h1 className="text-7xl font-bold text-foreground">404</h1>
+        <div className="site-status-card max-w-md text-center">
+          <img src={logoMark} alt="" aria-hidden="true" className="site-status-logo" />
+          <p className="eyebrow">
+            <span aria-hidden="true" /> CYTIC CREATIVES
+          </p>
+          <h1 className="display-md">404</h1>
           <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="site-status-copy">
             The page you're looking for doesn't exist or has been moved.
           </p>
           <div className="mt-6">
@@ -44,12 +50,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   const router = useRouter();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+    <main className="site-status-page site-error-page">
+      <div className="site-status-card max-w-md text-center">
+        <img src={logoMark} alt="" aria-hidden="true" className="site-status-logo" />
+        <p className="eyebrow">
+          <span aria-hidden="true" /> CYTIC CREATIVES
+        </p>
+        <h1 className="display-md">A small detour.</h1>
+        <p className="site-status-copy">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -58,19 +66,16 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="site-status-primary"
           >
             Try again
           </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
+          <a href="/" className="site-status-secondary">
             Go home
           </a>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -146,6 +151,7 @@ function MaintenancePage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-navy px-6 text-cream">
       <div className="max-w-2xl py-20">
+        <img src={logoText} alt="CYTIC CREATIVES" className="maintenance-wordmark" />
         <p className="eyebrow text-gold">
           <span aria-hidden="true" /> CYTIC CREATIVES
         </p>

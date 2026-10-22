@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import heroImage from "@/assets/cytic-hero.png";
 import logoMark from "@/assets/CYTIC_Logo_512p.png";
+import { businessAddress } from "@/data/site";
 import { Button } from "@/components/ui/button";
 import { ArrowLink, CTA, Eyebrow, Page } from "@/components/site/SiteShell";
 import { ContentLoading } from "@/components/site/ContentLoading";
@@ -38,6 +39,16 @@ export const Route = createFileRoute("/")({
           description:
             "Digital products, digital presence, brand development, and brand applications.",
           parentOrganization: { "@type": "Organization", name: "Namielus Group Limited" },
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "Afri Courts, 69 Buganda Rd",
+            addressLocality: "Kampala",
+            addressCountry: "UG",
+          },
+          location: {
+            "@type": "Place",
+            name: businessAddress,
+          },
         }),
       },
     ],

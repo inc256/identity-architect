@@ -1,5 +1,8 @@
 export type ServiceItem = { label: string; detail: string };
 
+export const businessAddress = "Afri Courts, 69 Buganda Rd, Kampala";
+export const businessMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(businessAddress)}`;
+
 export const services: {
   id: string;
   number: string;

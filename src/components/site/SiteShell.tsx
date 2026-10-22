@@ -3,6 +3,7 @@ import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import logoText from "@/assets/CYTIC_Logo_Text_512p.png";
+import { businessAddress, businessMapUrl } from "@/data/site";
 import { useWebsiteSettings } from "@/lib/website-settings";
 import { getSocialUrl } from "@/lib/cms";
 
@@ -11,6 +12,7 @@ const nav = [
   ["Work", "/work"],
   ["Services", "/services"],
   ["Blog", "/blog"],
+  ["Contact Us", "/contact"],
   ["Quote", "/quote"],
   ["About", "/about"],
 ] as const;
@@ -103,13 +105,16 @@ export function SiteFooter() {
           </div>
           <div className="grid grid-cols-2 gap-8 text-sm">
             <div className="flex flex-col gap-3">
-              {[...links, ["Contact", "/contact"]].map(([l, t]) => (
+              {links.map(([l, t]) => (
                 <Link key={t} to={t} className="footer-link">
                   {l}
                 </Link>
               ))}
             </div>
             <div className="flex flex-col gap-3 text-cream/60">
+              <a href={businessMapUrl} target="_blank" rel="noreferrer" className="footer-link">
+                {businessAddress}
+              </a>
               {settings.public_email && (
                 <a href={`mailto:${settings.public_email}`} className="footer-link">
                   {settings.public_email}
@@ -135,10 +140,6 @@ export function SiteFooter() {
         </div>
         <div className="site-footer-bottom flex flex-col text-xs text-cream/55 sm:flex-row sm:justify-between">
           <p>© CYTIC CREATIVES</p>
-          <div className="flex gap-5">
-            <Link to="/privacy">Privacy Policy</Link>
-            <Link to="/terms">Terms & Conditions</Link>
-          </div>
         </div>
       </div>
     </footer>
